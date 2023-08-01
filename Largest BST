@@ -1,0 +1,84 @@
+Largest BST
+Send Feedback
+Given a Binary tree, find the largest BST subtree. That is, you need to find the BST with maximum height in the given binary tree. You have to return the height of largest BST.
+Note :
+The binary tree will be consisting of only unique elements.
+Input format :
+The first line of input contains data of the nodes of the tree in level order form. The data of the nodes of the tree is separated by space. If any node does not have left or right child, take -1 in its place. Since -1 is used as an indication whether the left or right nodes exist, therefore, it will not be a part of the data of any node.
+Output format:
+The first and only line of output contains the height of the largest BST.
+Constraints:
+Time Limit: 1 second
+Sample Input 1:
+5 10 6 2 3 -1 -1 -1 -1 -1 9 -1 -1
+Sample Output 1:
+2
+
+Code : 
+public class Solution {
+	/*
+	 * BinaryTreeNode class
+	 * 
+	 * class BinaryTreeNode<T> 
+	 * { 
+	 * 		T data; 
+	 * 		BinaryTreeNode<T> left; 
+	 * 		BinaryTreeNode<T> right;
+	 *		public BinaryTreeNode(T data) 
+	 *		{
+	 *  		this.data = data; 
+	 *  	} 
+	 *  }
+	 */
+	
+	public static int largestBSTSubtree(BinaryTreeNode<Integer> root) {
+		// Write your code here
+		return largestBst(root).size;
+	}
+
+	public static NodeInfo largestBst(BinaryTreeNode<Integer> root)
+	{
+		if(root == null)
+		{
+			NodeInfo subtree = new NodeInfo(0, Integer.MIN_VALUE  , Integer.MAX_VALUE , true);
+			return subtree;
+		}
+
+		NodeInfo left = largestBst(root.left);
+		NodeInfo right = largestBst(root.right);
+
+		NodeInfo subtree = new NodeInfo();
+
+		subtree.max = Math.max(Math.max(left.max , right.max), root.data);
+		subtree.min = Math.min(Math.min(left.min , right.min),root.data);
+
+		subtree.isBst = left.isBst && right.isBst && (root.data > left.max) && (root.data < right.min);
+
+		if(subtree.isBst)
+		{
+			subtree.size = Math.max(left.size , right.size) + 1;
+		}
+		else
+		{
+			subtree.size = Math.max(left.size , right.size);
+		}
+
+		return subtree;
+	}
+}
+
+class NodeInfo{
+	int size;
+	int max;
+	int min;
+	boolean isBst;
+
+	NodeInfo(){}
+	NodeInfo(int size , int max , int min , boolean isBst)
+	{
+		this.size = size;
+		this.max = max;
+		this.min = min;
+		this.isBst = isBst; 
+	}
+}
